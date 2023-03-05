@@ -17,7 +17,11 @@ document.addEventListener('DOMContentLoaded', () => {
     let totalPrice = 0;
 
     //***************************EVENTO de click
-
+    document.addEventListener('click',({target})=>{
+        if(target.matches('#buy')){//si pulsamos al boton del carrito en el index
+            visibleTable();//cambia la visibilidad de la tabla
+        }
+    })
 
 
     //**************************LLAMADA A LA API NOTA: enlace: https://dummyjson.com/products
@@ -59,7 +63,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const printHeaderButton = () => {
         const buttonHeader = document.createElement('button');
         if(location.pathname='/index.html'){
-        buttonHeader.innerHTML=`<i class="fa-thin fa-cart-shopping"></i>`
+        buttonHeader.innerHTML=`el i no funciona`;
         buttonHeader.id = 'buy'
 
         }else if(location.pathname='/carrito.html'){
@@ -108,6 +112,7 @@ document.addEventListener('DOMContentLoaded', () => {
 const printStars =(rating) => {//siendo productos el array con todos los productos y su info
     console.log(rating);
     const divStars = document.createElement('DIV');
+    divStars.id = 'stars';
     const container1 = document.createElement('DIV');
     const container2 = document.createElement('DIV');
     const container3 = document.createElement('DIV');
@@ -167,8 +172,10 @@ const printStars =(rating) => {//siendo productos el array con todos los product
 }
 
 //pintar tabla index, aparece y se esconde al pulsar en el boton del header, usar toggle
-const printTableIndex = () =>{
-    
+//document.getElementById("element").style.visibility = 'visible';
+const visibleTable = () =>{
+    tableIndex.classList.toggle('visible');
+    console.log('visible');
 }
 
 //pintar botones para navegar entre los productos

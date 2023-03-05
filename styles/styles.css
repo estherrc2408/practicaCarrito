@@ -11,3 +11,15 @@
 div{
     border: 1px solid black;
 }
+#stars{
+    display:inline;
+}
+
+.table-container-index{
+    display:content;
+    background-color: white;
+}
+.visible{
+    display:none;
+    background-color: white;
+}
