@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-    //querySelector
+    //querySelectors
     //index.html
     const headerButon = document.querySelector('.button-container');//si estamos en index.html pintara distintas cosas que en carrito.html
     const tableIndex = document.querySelector('.table-container-index');
@@ -19,16 +19,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
     //***************************EVENTO de click
     document.addEventListener('click', ({ target }) => {
-        console.log(target);
         if (target.matches('#buy')) {//si pulsamos al boton del carrito en el index
+            console.log(target);
             visibleTable();//cambia la visibilidad de la tabla
         }
         if (target.matches('#back.index')) {
+            console.log(target);
             location.href = 'index.html';
         }
         if (target.matches('.addProduct')) {
+            console.log(target);
             addProduct(target.id);
+
         }
+
 
     })
 
@@ -45,6 +49,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             if (peticion.ok) {//si el ok es true se hace la conversion con los datos pedidos
                 const respuesta = await peticion.json();
+
                 console.log(respuesta);
                 return {
                     ok: true,
@@ -92,8 +97,6 @@ document.addEventListener('DOMContentLoaded', () => {
         console.log(arrayProducts);
         //tres primeros
         arrayProducts.forEach(({ id, title, description, price, rating, images }) => {
-            console.log(title, description, price);
-
             const card = document.createElement('DIV');
             const divImg = document.createElement('DIV');
             const productImg = document.createElement('IMG');
@@ -125,7 +128,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     //pintar estrellas funcion
     const printStars = (rating) => {//siendo productos el array con todos los productos y su info
-        console.log(rating);
         const divStars = document.createElement('DIV');
         divStars.id = 'stars';
         const container1 = document.createElement('DIV');
@@ -191,25 +193,41 @@ document.addEventListener('DOMContentLoaded', () => {
         let consult = await consulta();
         let allProducts = consult.respuesta.products;
         //buscamos en la API el id del objeto que hemos anadido al carro
-        const obj = allProducts.find(({ id }) => id = idProd);
-        obj.contador = null;
-        console.log(obj);//si sale el objeto
+        console.log(allProducts);
+        let obj = allProducts.find(({ id }) => id = idProd);
+
+        console.log(obj);
+        console.log(obj.id);//si sale el objeto
         //buscamos si en el array de productos seleccionados ya existe el objeto que hemos metido al carrito
-        const foundList = arraySelectedProducts.find(({ id }) => id = idProd);//deberia de encontrar un objeto si es que lo encuentraa
+        const foundList = arraySelectedProducts.find(({ id }) => id = idProd);//deberia de encontrar un objeto si es que lo encuentra
         console.log(foundList);
         if (foundList == undefined) {
-            obj.contador = 1;
+            obj.contador = 0;
+            obj.contador++;//si no encuentra el elemento en la lista de seleccionados, anade al objeto una nueva propiedad llamada contador y le da el valor de 1
             arraySelectedProducts.push(obj);
-            console.log(arraySelectedProducts);//va bien
-        } else if (foundList != undefined) {//en caso de que si exista en la cesta tendremos que añadirle mas uno al contador 
-            let contador = obj.contador + 1;
-            obj.contador = contador;
-            console.log(obj)
-        }
-        return obj;//el product sera el objeto al que han dado en el boton add to Card
-    }
-    const deleteProduct = () => {
+            console.log('anadido obj al array' + arraySelectedProducts);//va bien
+        } else if (foundList != undefined) {//en caso de que si exista en la cesta un producto de minmo indice tendremos que añadirle mas uno al contador 
+            foundList.contador++;
 
+        }
+    }
+
+    const deleteProduct = async (idProd) => {
+        const foundList = arraySelectedProducts.find(({ id }) => id = idProd);
+        foundList.contador--;
+        if (foundList.contador > 0) {//si el id del producto está en nuestra cesta, le restamos uno a su contador
+            let index = arraySelectedProducts.findIndex((prod) => {            //buscamos el indice dentro del array de productos que tenga el mismo id que el que acaban de quitar de la cesta
+                if (prod.id == foundList.id) {
+                    return true;
+                }
+            });
+            if (index != -1) {
+                arraySelectedProducts[index] = foundList;
+            }
+            console.log(arraySelectedProducts);
+        } else if (foundList.contador = 0) {
+            //funcion que busque y elimine la linea de la tabla asociada al elemento
+        }
     }
 
     //funcion visibilidad de la tabla
