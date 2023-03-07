@@ -3,18 +3,19 @@ document.addEventListener('DOMContentLoaded', () => {
     //index.html
     const headerButon = document.querySelector('.button-container');//si estamos en index.html pintara distintas cosas que en carrito.html
     const tableIndex = document.querySelector('.table-container-index');
+    const bodyTable = document.querySelector('.shopping tbody');
     const cardContainer = document.querySelector('#grid-card-container');
+    const buyButton = document.querySelector('#buy-button');
     const navButtons = document.querySelector('.button-nav-container');
     //carrito.html
     const tableContainer = document.querySelector('.table-container tbody');
     const table = document.querySelector('.shopping');
-    const buyButton = document.querySelector('#buy-button-container');
+    //const buyButton = document.querySelector('#buy-button-container');
 
     const fragment = document.createDocumentFragment();
 
     //VARIABLES
     let arraySelectedProducts = [];
-    let countProducts = [];
     let totalPrice = 0;
 
     //***************************EVENTO de click
@@ -29,12 +30,23 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         if (target.matches('.addProduct')) {
             console.log(target);
-            addProduct(target.id);
+            addProduct(target.id);//aqui se actualiza el local
+            printIndexTable();//aqui se recoge el local y se pinta en la tabla
 
         }
+        if (target.matches('.deleteProduct')){
+            console.log(target);
+            deleteProduct(target.id);
+            printIndexTable();
+        }
+        if(target.matches('#buy-button')){
+            console.log(target);
+            //location.href='./carrito.html';
+        }
+    }
 
 
-    })
+    )
 
 
     //**************************LLAMADA A LA API NOTA: enlace: https://dummyjson.com/products
@@ -98,8 +110,10 @@ document.addEventListener('DOMContentLoaded', () => {
         //tres primeros
         arrayProducts.forEach(({ id, title, description, price, rating, images }) => {
             const card = document.createElement('DIV');
+            card.className = 'grid-item';
             const divImg = document.createElement('DIV');
             const productImg = document.createElement('IMG');
+            productImg.className='card-img';
             productImg.src = images[0];
             divImg.append(productImg);
             card.append(divImg);
@@ -130,62 +144,77 @@ document.addEventListener('DOMContentLoaded', () => {
     const printStars = (rating) => {//siendo productos el array con todos los productos y su info
         const divStars = document.createElement('DIV');
         divStars.id = 'stars';
-        const container1 = document.createElement('DIV');
-        const container2 = document.createElement('DIV');
-        const container3 = document.createElement('DIV');
-        const container4 = document.createElement('DIV');
-        const container5 = document.createElement('DIV');
-        const star1 = document.createElement('img');
-        const star2 = document.createElement('img');
-        const star3 = document.createElement('img');
-        const star4 = document.createElement('img');
-        const star5 = document.createElement('img');
         const emptyStar = '../img/star2.png';
         const fullStar = '../img/star1.png';
-        if (rating < 1) {
-            star1.src = emptyStar;
-            star2.src = emptyStar;
-            star3.src = emptyStar;
-            star4.src = emptyStar;
-            star5.src = emptyStar;
-        } else if (rating < 2 && rating > 1) {
-            star1.src = fullStar;
-            star2.src = emptyStar;
-            star3.src = emptyStar;
-            star4.src = emptyStar;
-            star5.src = emptyStar;
-        } else if (rating < 3 && rating > 2) {
-            star1.src = fullStar;
-            star2.src = fullStar;
-            star3.src = emptyStar;
-            star4.src = emptyStar;
-            star5.src = emptyStar;
-        } else if (rating < 4 && rating > 3) {
-            star1.src = fullStar;
-            star2.src = fullStar;
-            star3.src = fullStar;
-            star4.src = emptyStar;
-            star5.src = emptyStar;
-        } else if (rating < 5 && rating > 4) {
-            star1.src = fullStar;
-            star2.src = fullStar;
-            star3.src = fullStar;
-            star4.src = fullStar;
-            star5.src = emptyStar;
-        } else if (rating = 5) {
-            star1.src = fullStar;
-            star2.src = fullStar;
-            star3.src = fullStar;
-            star4.src = fullStar;
-            star5.src = fullStar;
+        for (let i = 0; i < Math.round(rating); i++) {
+            const container = document.createElement('DIV');
+            const star = document.createElement('img');
+            star.src = fullStar;
+            star.className='img-star';
+            container.append(star);
+            divStars.append(container);
+        } for (let i = 0; i < 5 - Math.round(rating); i++) {
+            const container = document.createElement('DIV');
+            const star = document.createElement('img');
+            star.src = emptyStar;
+            container.append(star);
+            divStars.append(container);
         }
-        divStars.append(container1, container2, container3, container4, container5);
-        container1.append(star1);
-        container2.append(star2);
-        container3.append(star3);
-        container4.append(star4);
-        container5.append(star5);
         return divStars;
+    }
+    //pintar la tabla del index los objetos que anadan a la cesta o en su defecto actualizarlos
+    const printIndexTable = () => {//si no pasamos un id a la funcion pinta lo del localStorage nada mas inicial la pagina
+        bodyTable.innerHTML = '';
+        let arrayLocal = getLocal();
+        console.log(arrayLocal);
+        if (arrayLocal.length != 0) {
+            arrayLocal.forEach(({ id, images, title, price, contador }) => {
+                const row = document.createElement('TR');
+                row.id = id;
+
+                const tdImage = document.createElement('TD');
+                const divthumb = document.createElement('div');
+                divthumb.className='thumb';
+                const imageThumb = document.createElement('IMG');
+                imageThumb.src = images[4];
+                imageThumb.className='thumb';
+                divthumb.append(imageThumb);
+                tdImage.append(divthumb);
+                const emptyTD = document.createElement('TD');
+
+                const tdName = document.createElement('TD');
+                tdName.textContent = title;
+
+                const tdPrice = document.createElement('TD');
+                tdPrice.textContent = price;
+
+                const tdQuantity = document.createElement('TD');
+                tdQuantity.textContent = contador;
+
+                const tdLess = document.createElement('TD');
+                const lessButton = document.createElement('BUTTON');
+                lessButton.className = 'deleteProduct';
+                lessButton.id = id;
+                lessButton.textContent = '-';
+                tdLess.append(lessButton);
+
+                const tdMore = document.createElement('TD');
+                const moreButton = document.createElement('BUTTON');
+                moreButton.className = 'addProduct';
+                moreButton.id = id;
+                moreButton.textContent = '+';
+                tdMore.append(moreButton);
+
+                const tdSubtotal = document.createElement('TD');
+                tdSubtotal.innerHTML = `${price}$ * ${contador} = ${price * contador}`;
+                row.append(emptyTD, tdImage, tdName, tdPrice, tdLess, tdQuantity, tdMore, tdSubtotal)
+                fragment.append(row);
+            })
+            bodyTable.append(fragment);
+
+        }
+        //en caso de que si pasemos id, sera porque se ha pulsado un boton de add o delete y tenemos repintar la tabla con el local actualizado, bajamos el local y lo pintamos
+
     }
 
     //pintar objetos en la tabla index
@@ -194,27 +223,29 @@ document.addEventListener('DOMContentLoaded', () => {
         let allProducts = consult.respuesta.products;
         //buscamos en la API el id del objeto que hemos anadido al carro
         console.log(allProducts);
-        let obj = allProducts.find(({ id }) => id = idProd);
-
-        console.log(obj);
-        console.log(obj.id);//si sale el objeto
+        let obj = allProducts.find((prod) => prod.id == idProd);
+        console.log('id del obj seleccionado' + obj.id);//si sale el objeto
         //buscamos si en el array de productos seleccionados ya existe el objeto que hemos metido al carrito
-        const foundList = arraySelectedProducts.find(({ id }) => id = idProd);//deberia de encontrar un objeto si es que lo encuentra
+        const foundList = arraySelectedProducts.find((prods) => prods.id == obj.id);//deberia de encontrar un objeto si es que lo encuentra
         console.log(foundList);
         if (foundList == undefined) {
             obj.contador = 0;
             obj.contador++;//si no encuentra el elemento en la lista de seleccionados, anade al objeto una nueva propiedad llamada contador y le da el valor de 1
             arraySelectedProducts.push(obj);
+            setLocal();
             console.log('anadido obj al array' + arraySelectedProducts);//va bien
         } else if (foundList != undefined) {//en caso de que si exista en la cesta un producto de minmo indice tendremos que añadirle mas uno al contador 
             foundList.contador++;
-
+            console.log('+1 contador');
+            setLocal();
         }
+        console.log(arraySelectedProducts);
     }
 
     const deleteProduct = async (idProd) => {
-        const foundList = arraySelectedProducts.find(({ id }) => id = idProd);
+        const foundList = arraySelectedProducts.find((prods) => prods.id == idProd);
         foundList.contador--;
+        console.log(foundList);
         if (foundList.contador > 0) {//si el id del producto está en nuestra cesta, le restamos uno a su contador
             let index = arraySelectedProducts.findIndex((prod) => {            //buscamos el indice dentro del array de productos que tenga el mismo id que el que acaban de quitar de la cesta
                 if (prod.id == foundList.id) {
@@ -223,11 +254,14 @@ document.addEventListener('DOMContentLoaded', () => {
             });
             if (index != -1) {
                 arraySelectedProducts[index] = foundList;
+                setLocal();
             }
             console.log(arraySelectedProducts);
         } else if (foundList.contador = 0) {
-            //funcion que busque y elimine la linea de la tabla asociada al elemento
+            arraySelectedProducts.splice(index,1)
+            setLocal();
         }
+
     }
 
     //funcion visibilidad de la tabla
@@ -243,30 +277,26 @@ document.addEventListener('DOMContentLoaded', () => {
 
     //pintar buy boton
 
-
     //*********LOCALHOST
     //SET
-    /*function agregarLocal(prod) {
-        localStorage.setItem('producto', JSON.stringify(prod));//sera subido en formato JSON {"id":"podN","nombre":"nombreproducto"
-    }
-    */
-    const addLocal = (product) => {//siendo product un objeto 
-        localStorage.setItem('producto', JSON.stringify(product));//
+    const setLocal = () => {//objeto producto
+        console.log('seteando local ')
+        localStorage.setItem('products', JSON.stringify(arraySelectedProducts));//convierte un objeto a string
     }
     //GET
-    /*
-    function extraerLocal() {
-        const arrayCesta = JSON.parse(localStorage.getItem('producto')) || [];
-        let num = arrayCesta.lenght - 1;
-        return arrayCesta[num];
+    const getLocal = () => {
+        return JSON.parse(localStorage.getItem('products')) || [];//recuperar nuesto array de objetos y convertirlo en un array
     }
-    
-    
-    //*************************funciones de todo
-    */
+
     const init = () => {
+        if(location.pathname='/index.html'){
+        printIndexTable();
         printHeaderButton();
         printCards();
     }
+    else if(location.pathname='/carrito.html'){
+        printHeaderButton();
+        printIndexTable();
+    }}
     init();
 })//LOAD
