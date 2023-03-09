@@ -9,41 +9,42 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css"
         integrity="sha512-SzlrxWUlpfuzQ+pcUCosxcglQRNAq/DZjVsC0lE40xsADsfeQoEypE+enwcOiGjk/bSuGGKHEyjSoQ1zVisanQ=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles\styles.css" />
 </head>
 
 <body>
     <header class="header">
-        <h1>PRÁCTICA COMPRAS</h1>
+        
         <div class="button-container">
+        <h1>PRÁCTICA COMPRAS</h1>    
             <!--imagen del carrito de la compra-->
         </div>
         <div class="table-container-index">
-                <table class="shopping">
-                    <thead>
-                        <tr>
-                            <th></th>
-                            <th>Image</th>
-                            <th>Name</th>
-                            <th>Price</th>
-                            <th>Less</th>
-                            <th>Quantity</th>
-                            <th>More</th>
-                            <th>Subtotal</th>
-                        </tr>
-                    </thead>
-                    <tbody>
+            <table class="shopping">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>Image</th>
+                        <th>Name</th>
+                        <th>Price</th>
+                        <th>Less</th>
+                        <th>Quantity</th>
+                        <th>More</th>
+                        <th>Subtotal</th>
+                    </tr>
+                </thead>
+                <tbody class="shopping-body">
 
-                    </tbody>
-                    <tfoot>
-                        <tr>
-                            <td><button id="buy-button">BUY<a href="./carrito.html"></a></button></td>
-                            <td></td>
-                            <td></td><td></td><td></td><td></td>
-                            <td>TOTAL</td>
-                        </tr>
-                    </tfoot>
-                </table>
+                </tbody>
+                <tfoot>
+                    <tr id="insert-total-td">
+
+                    </tr>
+                </tfoot>
+            </table>
         </div>
     </header>
     <div id="grid-card-container">
